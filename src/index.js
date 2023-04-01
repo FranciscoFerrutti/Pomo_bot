@@ -50,8 +50,8 @@ module.exports = {
         }
 
     }
-}
-*/
+}*/
+
 
 /*
 client.on('messageCreate', async (message) => {
@@ -99,12 +99,57 @@ client.on('messageCreate', async (message) => {
 */
 
 
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async (interaction) => {
     if(!interaction.isChatInputCommand()) return;
 
     if(interaction.commandName === 'gpt'){
         const question = interaction.options.getString('input');
-        console.log(question);            
+       // send question to open ai
+        let conversationLog = [{ role: 'system', content: 'You are a friendly chatbot.' }];
+
+        try {
+            await interaction.deferReply();
+            
+
+            // send question to open ai
+            const messages = [
+                {
+                    role: "system",
+                    content: "You are helpful assistant"
+                },
+                {
+                    role: "user",
+                    content: question
+                }
+            ]
+            const data = {
+                model: "gpt-3.5-turbo",
+                messages,
+            }
+            let res = await fetch("https://api.openai.com/v1/chat/completions",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${process.env.API_KEY}`
+                    },
+                    body: JSON.stringify(data)
+                })
+
+            res = await res.json()
+            if(res.error){
+                console.error(res)
+            }
+
+            const embed = new EmbedBuilder()
+            .setColor('#0099ff')
+            .setDescription(`\`\`\`${res.choices[0].message.content.trim()}\`\`\``)
+            await interaction.editReply({embeds: [embed]});
+
+        } catch (error) {
+            console.log(`ERR: ${error}`);
+        }
+
     }
 });
 
