@@ -15,23 +15,55 @@ const commands = [
         ],
     },
     {
-        name: 'add',
-        description: 'Adds two numbers',
+        name: 'bored',
+        description: 'I am bored',
+    },
+    {
+        name: 'randomize',
+        description: 'RANDOMIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!VOY 7 REDBULLLSS!!!!!!!!!!!!!!!!!!!!!!',
         options: [
             {
-                name: 'num1',
-                description: 'Input num1',
-                type: ApplicationCommandOptionType.Number,
+                name: 'random',
+                description: 'Input a random:',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'flashcards',
+        description: 'Returns flashcards on a given topic',
+        options: [
+            {
+                name: 'topic',
+                description: 'Topic of flashcards',
+                type: ApplicationCommandOptionType.String,
                 required: true,
             },
             {
-                name: 'num2',
-                description: 'Input num2',
+                name: 'amount',
+                description: 'Amount of flashcards',
                 type: ApplicationCommandOptionType.Number,
                 required: true,
             },
         ],
     },
+    {
+        name: 'pomodoro',
+        description: 'Sets pomodoro timer',
+    },
+    {
+        name: 'help',
+        description: 'List of all bot commands',
+    },
+    {
+        name: 'get-creative',
+        description: 'Provides a prompt for a quick sketch during your break',
+    },
+    {
+        name: 'next',
+        description: 'displays next flashcard',
+    }
 ];
 
 const rest = new REST({version: '9'}).setToken(process.env.TOKEN);
