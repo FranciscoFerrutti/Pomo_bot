@@ -100,16 +100,16 @@ const commands = [
             {
                 name: 'yesno',
                 description: 'yes/no choice',
-                type: ApplicationCommandOptionType.Number,
+                type: ApplicationCommandOptionType.Boolean,
                 required: true,
                 choices: [
                     {
                         name: 'yes',
-                        value: 1,
+                        value: true,
                     },
                     {
                         name: 'no',
-                        value: 0,
+                        value: false,
                     },  
                 ], 
             

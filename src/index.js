@@ -22,21 +22,13 @@ client.on('ready', () => {
 questions = [];
 answers = [];
 lastRandom = 0;
+completedSession = 
 
-//this boolean will be used to determine whether or not the bot is waiting for a response after a flashcard
-    //if it is waiting, it will not let user execute any other commands
-//isWaiting = false;
 //state array will keep a score of how many times a question has been answered correctly
     //if the question has been answered correctly 3 times, it will be removed from the pool of possible questions
     //if a question is answered incorrectly, its state will be set to 0
 state = [];
 counter = 0;
-
-client.on('message', message => {
-
-      // Your code here
-      console.log("AAAAA")
-  });
 
 
 client.on('interactionCreate', async (interaction) => {
@@ -89,10 +81,7 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
     if(interaction.commandName === 'pomodoro'){
-        //if(isWaiting){
-        //    interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //    return;
-        //}
+    
         const workTime = interaction.options.get('work-time').value;
         const breakTime = interaction.options.get('break-time').value;
         const cycles = interaction.options.get('cycle-amount').value;
@@ -139,13 +128,16 @@ client.on('interactionCreate', async (interaction) => {
         
           // Start the first work session
           startWorkSession();
+
+        const embed = new EmbedBuilder()
+        .setColor('#db441a')
+        .setTitle('Pomodoro')
+        .setDescription('Your own personal timer!')
+        interaction.reply({embeds: [embed]});
         
     }
     if(interaction.commandName === 'game'){
-        // if(isWaiting){
-        //     interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     return;
-        // }
+       
         function guessingGame() {
             const answer = Math.floor(Math.random() * 100) + 1; // Generate random number between 1 and 100
             let attempts = 0;
@@ -179,10 +171,7 @@ client.on('interactionCreate', async (interaction) => {
         interaction.reply({embeds: [embed]});
     }
     if(interaction.commandName === 'bored'){
-        // if(isWaiting){
-        //     interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     return;
-        // }
+
         let getAct = async () => {
             let response = await axios.get('https://www.boredapi.com/api/activity');
             let act = response.data;
@@ -197,10 +186,7 @@ client.on('interactionCreate', async (interaction) => {
         interaction.reply({embeds: [embed]});
     }
     if(interaction.commandName === 'randomize'){
-        // if(isWaiting){
-        //     interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     return;
-        // }
+    
         const rand = interaction.options.getString('random');
         const question = 'Give me a random ' + rand + ', dont make any explanations just give me a random:' + rand + '. ';
         try {
@@ -248,12 +234,6 @@ client.on('interactionCreate', async (interaction) => {
 
     
     if(interaction.commandName === 'flashcards'){
-        // if(isWaiting){
-        //     interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     return;
-        // }
-        //const amount = interaction.options.get('amount').value + 1;
-        //amount++;
         questions.splice(0, questions.length);
         answers.splice(0, questions.length);
         //set state array to 0
@@ -296,11 +276,6 @@ client.on('interactionCreate', async (interaction) => {
                 console.error(res)
             }
 
-            //const embed = new EmbedBuilder()
-            //.setColor('#0099ff')
-            //.setDescription(`\`\`\`${res.choices[0].message.content.trim()}\`\`\``)
-            //await interaction.editReply({embeds: [embed]});
-            
             const str = res.choices[0].message.content.trim();     
 
             const regex = /\d+\.\s(.+?)\n-\s(.+?)\n/g;
@@ -310,91 +285,45 @@ client.on('interactionCreate', async (interaction) => {
                 answers.push(match[2]);
             }
             
+            completedSession = false;
             
-            
-            //for loop to send each flashcard
-            //for(let i = 0; i < 5; i++){
-            //console.log(questions[0]);
-            //res = questions[0];
-            //await interaction.editReply(questions[0]);
                 const embed = new EmbedBuilder()
                     .setColor('#0099ff')
                     .setTitle('Question:')
                     .setDescription(`\`\`\`${questions[0]}\`\`\`\n||\`\`\`${answers[0]}\`\`\`||`)
                 await interaction.editReply({embeds: [embed]});
             
-                //const funciono = false
-                //isWaiting = true;
-                //console.log(interaction.message.channel)
-                //console.log(interaction.channel)
-                //console.log(interaction.options.data)
-                // while(!funciono) {
-
-                //     if (interaction.options.data == 'yes' || interaction.options.data == 'no') {
-                //         console.log('yes or no')
-                //         funciono = true
-                //     }
-                //     // try{
-                //     //     await waitForYesOrNo(interaction.message.channel);
-                //     //     console.log('yes or no')
-                //     //     funciono = true
-                //     // }
-                //     // catch(error){
-                //     //     console.log(`ERR: error with waitForYesNo function`);
-                //     // }
-                // }
-                
-
-            //}
-            //console.log(questions);
-            //console.log(answers);
 
         } catch (error) {
             console.log(`ERR: ${error}`);
         }
     }
     if(interaction.commandName === 'next'){
-        const n = interaction.options.get('yesno').value
-        console.log(n);
-        if(n){
+        if(completedSession)
+            //break;
+        if(interaction.options.get('yesno').value){
             if(checkState){
                 interaction.reply('youve completed the study session');
+                completedSession = true;
+                //break;
             }
+            state[counter]++;
         }
         else{
             state[counter] = 0;
         }
-        // if(isWaiting){
-        //     //interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     await waitForYesOrNo(interaction.channel);
-        //     return;
-        // }
+    
         counter = Math.floor(Math.random() * 5);
-        console.log(counter);
+        
         //if random generated number is same as last one or if state of that number is 3, generate new number
         while(counter === lastRandom || state[counter] >= 3){
             counter = Math.floor(Math.random() * 5) + 1;
         }
-
         const embed = new EmbedBuilder()
             .setColor('#32a848')
             .setTitle('Question:')
-            .setDescription(`\`\`\`${questions[counter]}\`\`\`\n\`\`\`${answers[counter]}\`\`\``)
+            .setDescription(`\`\`\`${questions[counter]}\`\`\`\n||\`\`\`${answers[counter]}\`\`\`||`)
         await interaction.reply({embeds: [embed]});
-        //isWaiting = true;
-        //const funciono = false
-                //isWaiting = true;
-                // while(!funciono) {
-                //     try{
-                //         await waitForYesOrNo(interaction.channel_id);
-                //         print("yes or no")
-                //         funciono = true
-                //     }
-                //     catch(error){
-                //         console.log(`ERR: error with waitForYesNo function`);
-                //     }
-                // }
-        
     }
     if(interaction.commandName === 'add'){
         const res = interaction.options.getNumber('num1') + interaction.options.getNumber('num2');
@@ -404,14 +333,11 @@ client.on('interactionCreate', async (interaction) => {
         const embed = new EmbedBuilder()
         .setColor('#1fedd8')
         .setTitle('Help')
-        .setDescription('All Commands: \n -help: list of all commands \n -flashcards: name a topic, we will give you flashcards on it! \n -gpt: answers any question! \n -pomodoro: study using the pomodoro method')
+        .setDescription('All Commands: \n -help: list of all commands \n -flashcards: name a topic, we will give you flashcards on it!\n next: passes on to the next question in flashcards and prompts you to say if you got the previous question right or wrong \n -gpt: answers any question! \n -pomodoro: study using the pomodoro method \n -get-creative: receive a prompt of something to do during your break \n -randomize: returns something random \n bored: returns a random activity \n ')
         interaction.reply({embeds: [embed]});
     }
     if(interaction.commandName === 'get-creative'){
-        // if(isWaiting){
-        //     interaction.reply({content: 'Please answer /yes if you got the last flashcard correct or /no if incorrect before executing new commands.'});
-        //     return;
-        // }
+       
         const question = 'Give me only one simple artistic and creative thing to do in 10 minutes time, and dont give any reasoning for it, just name the topic and what i should do. For example "Dance: to techno" or "Draw: a sunflower" or "Invent: a machine" or "Listen to: a beattles song"'
             try {
             await interaction.deferReply();
@@ -455,57 +381,19 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
     if(interaction.commandName === 'yes'){
-        // if(!isWaiting){
-        //     interaction.reply({content: 'You must be using flashcards to use this command.'});
-        //     return;
-        // }
-        //if yes, increment state of that number
+        
         state[counter]++;
-        //if state of that number is 3, remove it from array
-        // if(state[counter] >= 3){
-        //     questions.splice(counter, 1);
-        //     answers.splice(counter, 1);
-        // }
-        //set last random number to current random number
         lastRandom = counter;
-        //set waiting to false
-        //isWaiting = false;
+        
         const embed = new EmbedBuilder()
         .setColor('#00ff26')
         .setTitle('Help')
         .setDescription('All Commands: \n -help: list of all commands \n -flashcards: name a topic, we will give you flashcards on it! \n -gpt: answers any question! \n -pomodoro: study using the pomodoro method')
         interaction.reply({embeds: [embed]});
     }
-    if(interaction.commandName === 'no'){
-        // if(!isWaiting){
-        //     interaction.reply({content: 'You must be using flashcards to use this command.'});
-        //     return;
-        // }
-        if(state[counter] > 0 && state[counter] < 3){
-            state[counter] = 0;
-        }
-        lastRandom = counter;
-        //isWaiting = false;
-        const embed = new EmbedBuilder()
-        .setColor('#ff0000')
-        .setTitle('Help')
-        .setDescription('All Commands: \n -help: list of all commands \n -flashcards: name a topic, we will give you flashcards on it! \n -gpt: answers any question! \n -pomodoro: study using the pomodoro method')
-        interaction.reply({embeds: [embed]});
-    }
+    
 });
 
-function onYesCommand(message) {
-    // Do something if the user responds with /yes
-    message.channel.send('You said yes!');
-  }
-  
-  function onNoCommand(message) {
-    // Do something if the user responds with /no
-    message.channel.send('You said no!');
-  }
-  
-  // Listen for the message event
-  
   
 
 client.login(process.env.TOKEN);
