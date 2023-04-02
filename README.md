@@ -1,6 +1,8 @@
 # Project_Hackitba
 Somos el grupo 'Ciberchimpances', compuesto por: Inaki Bengolea, Francisco Marcos Ferrutti, Christian Ijjas, Felix Lopez Menardi
 
+Se desea aclarar que la mayoria del trabajo se hizo utilizando LiveShare en VSCode (del cual todos participamos) lo cual explica la mayoria de los commits viniendo de un participante.
+
 1. bajarse repo de github
 2. entrar a su cuenta de discord (recordar que debe estar en modo desarrollador)
 3. Una vez dentro de su server, haga click derecho sobre su nombre de servidor y aprete el boton “Copy ID”
