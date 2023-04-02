@@ -19,6 +19,42 @@ const commands = [
         description: 'I am bored',
     },
     {
+        name: 'game',
+        description: 'This is a  guessing game',
+        options: [
+            {
+                name: 'guess',
+                description: 'Input your guess:',
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+            },
+        ],
+    },
+    {
+        name: 'pomodoro',
+        description: 'Les gitit',
+        options: [
+            {
+                name: 'work-time',
+                description: 'How long do you want to work (minutes):',
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+            },
+            {
+                name: 'break-time',
+                description: 'How long do you want to relax (minutes):',
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+            },
+            {
+                name: 'cycle-amount',
+                description: 'How many cycles:',
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+            },
+        ],
+    },
+    {
         name: 'randomize',
         description: 'RANDOMIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!VOY 7 REDBULLLSS!!!!!!!!!!!!!!!!!!!!!!',
         options: [
@@ -40,18 +76,15 @@ const commands = [
                 type: ApplicationCommandOptionType.String,
                 required: true,
             },
-            {
-                name: 'amount',
-                description: 'Amount of flashcards',
-                type: ApplicationCommandOptionType.Number,
-                required: true,
-            },
+            // {
+            //     name: 'amount',
+            //     description: 'Amount of flashcards',
+            //     type: ApplicationCommandOptionType.Number,
+            //     required: true,
+            // },
         ],
     },
-    {
-        name: 'pomodoro',
-        description: 'Sets pomodoro timer',
-    },
+   
     {
         name: 'help',
         description: 'List of all bot commands',
@@ -62,8 +95,29 @@ const commands = [
     },
     {
         name: 'next',
-        description: 'displays next flashcard',
-    }
+        description: 'displays next flashcard (choose yes if the last flashcard was correct, no if it was wrong)',
+        options: [
+            {
+                name: 'yesno',
+                description: 'yes/no choice',
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+                choices: [
+                    {
+                        name: 'yes',
+                        value: 1,
+                    },
+                    {
+                        name: 'no',
+                        value: 0,
+                    },  
+                ], 
+            
+            }
+        ],         
+            
+        //required: true,
+    },
 ];
 
 const rest = new REST({version: '9'}).setToken(process.env.TOKEN);
