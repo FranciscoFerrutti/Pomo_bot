@@ -1,4 +1,4 @@
-# Project_Hackitba
+# Project_Hackitba: Pomo bot
 Somos el grupo 'Ciberchimpances', compuesto por: Inaki Bengolea, Francisco Marcos Ferrutti, Christian Ijjas, Felix Lopez Menardi
 
 Se desea aclarar que la mayoria del trabajo se hizo utilizando LiveShare en VSCode (del cual todos participamos) lo cual explica la mayoria de los commits viniendo de un participante.
